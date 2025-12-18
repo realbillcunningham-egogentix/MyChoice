@@ -46,9 +46,3 @@ export default App
 ```
 
 Save.
-
----
-
-**All files created.** Now in terminal run:
-```
-npm install
