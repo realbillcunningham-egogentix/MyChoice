@@ -219,7 +219,7 @@ Respond as ${persona.name} would, sharing your opinion on this topic.`
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-8">
+<div className="min-h-screen bg-gray-900 text-white flex flex-col items-center pt-16 p-8">
       <h1 className="text-4xl font-bold mb-2">OpinionGen MVP</h1>
       <p className="text-gray-400 mb-8">Powered by EgoGentix</p>
       
