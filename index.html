@@ -2,66 +2,1279 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyChoice.ai — Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>MyChoice.ai — Own Your Vibe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f0f0f0;
-  margin: 0;
-  padding: 20px;
-}
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-  background: white;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  text-align: center;
-}
-h1 {
-  color: #0d9488;
-  margin-bottom: 10px;
-}
-p {
-  color: #666;
-  line-height: 1.6;
-}
-.btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 12px 32px;
-  background: #0d9488;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-size: 16px;
-  cursor: pointer;
-}
-.btn:hover {
-  background: #0f766e;
-}
-.status {
-  margin-top: 20px;
-  padding: 10px;
-  background: #d1fae5;
-  color: #065f46;
-  border-radius: 8px;
-  font-size: 14px;
-}
+  :root {
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --teal-dark: #0f766e;
+    --green-soft: #d1fae5;
+    --green-bg: #ecfdf5;
+    --amber: #d97706;
+    --amber-light: #fbbf24;
+    --red-soft: #fecaca;
+    --red: #dc2626;
+    --navy: #0f172a;
+    --slate: #334155;
+    --slate-light: #64748b;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --white: #ffffff;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 48px rgba(15, 23, 42, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--gray-100);
+    color: var(--navy);
+    overflow: hidden;
+    height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── App Shell ─── */
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    height: 100vh;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* ─── Screens ─── */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    transform: translateX(40px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+  .screen.exit {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  /* ─── Top Bar ─── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    min-height: 56px;
+  }
+  .topbar .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    letter-spacing: -0.3px;
+  }
+  .topbar .logo span { color: var(--amber); }
+  .topbar .step-indicator {
+    font-size: 12px;
+    color: var(--slate-light);
+    font-weight: 500;
+    background: var(--gray-100);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* ─── Progress Bar ─── */
+  .progress-track {
+    height: 3px;
+    background: var(--gray-200);
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ─── Content ─── */
+  .content {
+    flex: 1;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .content h1 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--navy);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .content h1 em {
+    font-style: italic;
+    color: var(--teal-dark);
+  }
+  .content .subtitle {
+    font-size: 15px;
+    color: var(--slate-light);
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+
+  /* ─── Buttons ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--gray-100);
+    color: var(--slate);
+    border: 1px solid var(--gray-200);
+  }
+  .btn-secondary:hover { background: var(--gray-200); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--teal);
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  .btn-block { width: 100%; }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* ─── Screen 1: Welcome ─── */
+  .welcome-hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 24px;
+    background: linear-gradient(180deg, var(--green-bg) 0%, var(--white) 100%);
+  }
+  .welcome-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    box-shadow: 0 8px 32px rgba(13, 148, 136, 0.25);
+  }
+  .welcome-icon svg { width: 40px; height: 40px; color: white; }
+  .welcome-hero h1 {
+    font-family: var(--font-display);
+    font-size: 34px;
+    margin-bottom: 12px;
+  }
+  .welcome-hero p {
+    font-size: 16px;
+    color: var(--slate-light);
+    line-height: 1.6;
+    max-width: 320px;
+    margin-bottom: 36px;
+  }
+  .welcome-hero .tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--teal-dark);
+    margin-top: 24px;
+    opacity: 0.8;
+  }
+
+  /* ─── Screen 2: Onboarding ─── */
+  .input-group {
+    margin-bottom: 20px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .input-group input, .input-group select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--navy);
+    background: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .input-group input:focus, .input-group select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+  }
+  .family-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .chip {
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white);
+    color: var(--slate);
+    transition: all 0.2s;
+  }
+  .chip:hover, .chip.selected {
+    border-color: var(--teal);
+    background: var(--green-bg);
+    color: var(--teal-dark);
+  }
+
+  /* ─── Screen 3: Persona Engine ─── */
+  .persona-card {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 1.5px solid var(--gray-200);
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+  .persona-card:hover, .persona-card.selected {
+    border-color: var(--teal);
+    background: var(--green-bg);
+    box-shadow: 0 2px 12px rgba(13, 148, 136, 0.1);
+  }
+  .persona-card .q-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .persona-card h3 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--navy);
+  }
+  .persona-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .persona-opt {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--slate);
+  }
+  .persona-opt:hover, .persona-opt.picked {
+    background: var(--teal);
+    color: white;
+    border-color: var(--teal);
+  }
+
+  /* ─── Screen 4: Dashboard ─── */
+  .dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .vibe-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .vibe-green {
+    background: var(--green-soft);
+    color: var(--teal-dark);
+  }
+  .vibe-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .signal-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .signal-card {
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    border: 1px solid var(--gray-200);
+  }
+  .signal-card .signal-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  .signal-card .signal-label {
+    font-size: 12px;
+    color: var(--slate-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .signal-card .signal-value {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .signal-card .signal-sub {
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .family-member-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .family-member-row:last-child { border: none; }
+  .member-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .member-info { flex: 1; }
+  .member-info .name { font-weight: 600; font-size: 15px; }
+  .member-info .status { font-size: 13px; color: var(--slate-light); }
+  .member-vibe {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .vibe-g { background: #d1fae5; color: #065f46; }
+  .vibe-y { background: #fef3c7; color: #92400e; }
+
+  /* ─── Screen 5: AI Coach ─── */
+  .coach-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-area {
+    flex: 1;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .chat-bubble {
+    max-width: 85%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+    animation: bubbleIn 0.4s ease;
+  }
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .bubble-coach {
+    background: var(--gray-100);
+    color: var(--navy);
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+  }
+  .bubble-user {
+    background: var(--teal);
+    color: white;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+  }
+  .coach-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .coach-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .coach-suggestion {
+    padding: 12px 16px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--slate);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--white);
+  }
+  .coach-suggestion:hover {
+    border-color: var(--teal);
+    background: var(--green-bg);
+    color: var(--teal-dark);
+  }
+
+  /* ─── Screen 6: Agreement Builder ─── */
+  .agreement-section {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid var(--gray-200);
+  }
+  .agreement-section h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--navy);
+  }
+  .agreement-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 14px;
+    color: var(--slate);
+  }
+  .agreement-item:last-child { border: none; }
+  .agreement-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .agreement-check.checked {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .agreement-check.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .agreement-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .badge-parent { background: #dbeafe; color: #1e40af; }
+  .badge-teen { background: #fce7f3; color: #9d174d; }
+  .badge-family { background: var(--green-soft); color: var(--teal-dark); }
+
+  /* ─── Screen 7: Summary / CTA ─── */
+  .summary-screen {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(180deg, var(--white) 0%, var(--green-bg) 100%);
+  }
+  .summary-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 28px 0;
+    text-align: center;
+  }
+  .stat-box .stat-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+  .stat-box .stat-label {
+    font-size: 11px;
+    color: var(--slate-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .summary-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    text-align: left;
+  }
+  .pillar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    font-size: 14px;
+    color: var(--slate);
+  }
+  .pillar-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ─── Bottom Nav ─── */
+  .bottom-nav {
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-200);
+    position: sticky;
+    bottom: 0;
+  }
+  .bottom-nav .btn { flex: 1; }
+
+  /* ─── Animations ─── */
+  .fade-in { animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .slide-up { animation: slideUp 0.5s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── Responsive ─── */
+  @media (min-width: 481px) {
+    .app { border-radius: 24px; margin-top: 20px; height: calc(100vh - 40px); }
+    body { display: flex; align-items: flex-start; justify-content: center; padding-top: 0; }
+  }
+
+  /* ─── Typing indicator ─── */
+  .typing-dots { display: flex; gap: 4px; padding: 4px 0; }
+  .typing-dots span {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--slate-light);
+    animation: typing 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+  }
+
+  /* hide scrollbar */
+  .screen::-webkit-scrollbar { display: none; }
+  .screen { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>MyChoice.ai</h1>
-  <p>Mentorship over surveillance.<br>Coaching, not control.</p>
-  <button class="btn" onclick="alert('Button works!')">Test Button</button>
-  <div class="status">
-    If you can see this, the page is working!
+<div class="app" id="app">
+
+  <!-- ═══════ SCREEN 1: Welcome ═══════ -->
+  <div class="screen active" id="screen-1">
+    <div class="welcome-hero">
+      <div class="welcome-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <h1>MyChoice<span style="color:var(--amber);">.ai</span></h1>
+      <p>The family wellness platform that treats you like adults — not data points. Signal over noise. Shared agreements. Story-first.</p>
+      <button class="btn btn-primary" onclick="goTo(2)" style="min-width: 200px;">
+        Start Your Vibe
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <div class="tagline">Character first. Wisdom always.</div>
+    </div>
   </div>
+
+  <!-- ═══════ SCREEN 2: Onboarding ═══════ -->
+  <div class="screen" id="screen-2">
+    <div class="topbar">
+      <div class="logo">MyChoice<span>.ai</span></div>
+      <div class="step-indicator">1 of 5</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width: 20%"></div></div>
+    <div class="content">
+      <h1>Set up your <em>family</em></h1>
+      <p class="subtitle">Tell us a little about your household. This helps us personalize your experience.</p>
+      
+      <div class="input-group">
+        <label>Your first name</label>
+        <input type="text" placeholder="e.g., Bobby" id="user-name" value="Bobby">
+      </div>
+      
+      <div class="input-group">
+        <label>Family name</label>
+        <input type="text" placeholder="e.g., The Cunninghams" value="The Cunninghams">
+      </div>
+
+      <div class="input-group">
+        <label>Who's in your household?</label>
+        <div class="family-chips">
+          <div class="chip selected" onclick="this.classList.toggle('selected')">👨 Parent / Guardian</div>
+          <div class="chip selected" onclick="this.classList.toggle('selected')">👩 Partner</div>
+          <div class="chip selected" onclick="this.classList.toggle('selected')">👦 Teen (13-17)</div>
+          <div class="chip" onclick="this.classList.toggle('selected')">👧 Child (6-12)</div>
+          <div class="chip" onclick="this.classList.toggle('selected')">👶 Under 6</div>
+        </div>
+      </div>
+
+      <div style="flex:1"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-secondary" onclick="goTo(1)">Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Continue</button>
+    </div>
+  </div>
+
+  <!-- ═══════ SCREEN 3: Persona Engine ═══════ -->
+  <div class="screen" id="screen-3">
+    <div class="topbar">
+      <div class="logo">MyChoice<span>.ai</span></div>
+      <div class="step-indicator">2 of 5</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width: 40%"></div></div>
+    <div class="content">
+      <h1>Build your <em>persona</em></h1>
+      <p class="subtitle">We use these answers to calibrate your AI coach — not to judge or score you.</p>
+
+      <div class="persona-card" id="pq1">
+        <div class="q-label">Signal 01</div>
+        <h3>When things get stressful at home, I usually...</h3>
+        <div class="persona-options">
+          <div class="persona-opt" onclick="pickOpt(this)">Take space and process alone</div>
+          <div class="persona-opt" onclick="pickOpt(this)">Talk it out immediately</div>
+          <div class="persona-opt" onclick="pickOpt(this)">Focus on fixing the problem</div>
+          <div class="persona-opt picked" onclick="pickOpt(this)">Check in with everyone first</div>
+        </div>
+      </div>
+
+      <div class="persona-card" id="pq2">
+        <div class="q-label">Signal 02</div>
+        <h3>My biggest concern about screen time is...</h3>
+        <div class="persona-options">
+          <div class="persona-opt" onclick="pickOpt(this)">What my kids are actually seeing</div>
+          <div class="persona-opt picked" onclick="pickOpt(this)">That it replaces real connection</div>
+          <div class="persona-opt" onclick="pickOpt(this)">I don't know what's too much</div>
+          <div class="persona-opt" onclick="pickOpt(this)">Honestly, my own usage too</div>
+        </div>
+      </div>
+
+      <div class="persona-card" id="pq3">
+        <div class="q-label">Signal 03</div>
+        <h3>The parenting style I aspire to is...</h3>
+        <div class="persona-options">
+          <div class="persona-opt picked" onclick="pickOpt(this)">Guide — I want to coach, not control</div>
+          <div class="persona-opt" onclick="pickOpt(this)">Protector — safety comes first</div>
+          <div class="persona-opt" onclick="pickOpt(this)">Partner — we figure it out together</div>
+          <div class="persona-opt" onclick="pickOpt(this)">Architect — structure makes freedom</div>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-secondary" onclick="goTo(2)">Back</button>
+      <button class="btn btn-primary" onclick="goTo(4)">See My Dashboard</button>
+    </div>
+  </div>
+
+  <!-- ═══════ SCREEN 4: Dashboard ═══════ -->
+  <div class="screen" id="screen-4">
+    <div class="topbar">
+      <div class="logo">MyChoice<span>.ai</span></div>
+      <div class="step-indicator">3 of 5</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width: 60%"></div></div>
+    <div class="content">
+      <div class="dashboard-header">
+        <div>
+          <h1 style="font-size:22px; margin-bottom:2px;">The Cunninghams</h1>
+          <p class="subtitle" style="margin-bottom:0; font-size:13px;">Wednesday evening · Feb 12</p>
+        </div>
+        <div class="vibe-status vibe-green">
+          <div class="vibe-dot"></div>
+          All Clear
+        </div>
+      </div>
+
+      <div class="signal-cards">
+        <div class="signal-card">
+          <div class="signal-icon" style="background: #d1fae5;">🧘</div>
+          <div class="signal-label">Family Vibe</div>
+          <div class="signal-value">Calm</div>
+          <div class="signal-sub">↑ from yesterday</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-icon" style="background: #dbeafe;">📱</div>
+          <div class="signal-label">Screen Balance</div>
+          <div class="signal-value">Healthy</div>
+          <div class="signal-sub">Within agreements</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-icon" style="background: #fef3c7;">💬</div>
+          <div class="signal-label">Connection</div>
+          <div class="signal-value">Strong</div>
+          <div class="signal-sub">3 check-ins today</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-icon" style="background: #fce7f3;">🎯</div>
+          <div class="signal-label">Goals</div>
+          <div class="signal-value">On Track</div>
+          <div class="signal-sub">4 of 5 this week</div>
+        </div>
+      </div>
+
+      <h3 style="font-family:var(--font-display); font-size:16px; margin-bottom:12px; font-weight:600;">Family Members</h3>
+      
+      <div class="family-member-row">
+        <div class="member-avatar" style="background:#d1fae5;">👨</div>
+        <div class="member-info">
+          <div class="name">Bobby</div>
+          <div class="status">Last active · 2 min ago</div>
+        </div>
+        <div class="member-vibe vibe-g">Balanced</div>
+      </div>
+      <div class="family-member-row">
+        <div class="member-avatar" style="background:#dbeafe;">👩</div>
+        <div class="member-info">
+          <div class="name">Partner</div>
+          <div class="status">Last active · 20 min ago</div>
+        </div>
+        <div class="member-vibe vibe-g">Focused</div>
+      </div>
+      <div class="family-member-row">
+        <div class="member-avatar" style="background:#fce7f3;">👦</div>
+        <div class="member-info">
+          <div class="name">Alex (15)</div>
+          <div class="status">Homework mode · since 4pm</div>
+        </div>
+        <div class="member-vibe vibe-y">Nudge ready</div>
+      </div>
+
+      <div style="height:16px"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-secondary" onclick="goTo(3)">Back</button>
+      <button class="btn btn-primary" onclick="goTo(5)">Talk to Coach</button>
+    </div>
+  </div>
+
+  <!-- ═══════ SCREEN 5: AI Coach ═══════ -->
+  <div class="screen" id="screen-5">
+    <div class="topbar">
+      <div class="logo">MyChoice<span>.ai</span></div>
+      <div class="step-indicator">4 of 5</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width: 80%"></div></div>
+    <div class="content coach-container" style="padding-bottom: 0;">
+      <div style="margin-bottom:12px;">
+        <h1 style="font-size:20px;">Your <em>Coach</em></h1>
+        <p class="subtitle" style="margin-bottom:0; font-size:13px;">Powered by Claude AI. Ask anything about parenting, screen time, or family wellness.</p>
+      </div>
+      
+      <div class="chat-area" id="chat-area" style="flex: 1; overflow-y: auto; padding-bottom: 16px;">
+        <div>
+          <div class="coach-label">🌿 MyChoice Coach</div>
+          <div class="chat-bubble bubble-coach">
+            Hey Bobby — I noticed Alex has been in homework mode for a while. His focus signal is solid, but it might be a good time for a break check-in. What would you like to do?
+          </div>
+        </div>
+        
+        <div class="coach-suggestions" id="coach-suggestions">
+          <div class="coach-suggestion" onclick="sendQuickReply('Send Alex a friendly nudge to take a break')">
+            ✅ Send a friendly nudge
+          </div>
+          <div class="coach-suggestion" onclick="sendQuickReply('Let him keep going, check again in 30 minutes')">
+            ⏳ Let him flow — check later
+          </div>
+          <div class="coach-suggestion" onclick="sendQuickReply('Help me start a conversation with Alex about his screen time')">
+            💬 Help me start a conversation
+          </div>
+        </div>
+      </div>
+      
+      <!-- Chat input -->
+      <div class="chat-input-container" style="padding: 12px 0 16px 0; border-top: 1px solid var(--gray-200); background: var(--white);">
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="chat-input" placeholder="Ask your coach anything..." 
+            style="flex: 1; padding: 12px 16px; border: 1.5px solid var(--gray-200); border-radius: 24px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--teal)'" 
+            onblur="this.style.borderColor='var(--gray-200)'"
+            onkeypress="if(event.key === 'Enter') sendMessage()" />
+          <button onclick="sendMessage()" style="width: 44px; height: 44px; border-radius: 50%; background: var(--teal); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <p style="font-size: 10px; color: var(--slate-light); text-align: center; margin-top: 8px;">Powered by Claude AI · Conversations are private</p>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-secondary" onclick="goTo(4)">Back</button>
+      <button class="btn btn-primary" onclick="goTo(6)">Family Agreement</button>
+    </div>
+  </div>
+
+  <!-- ═══════ SCREEN 6: Agreement Builder ═══════ -->
+  <div class="screen" id="screen-6">
+    <div class="topbar">
+      <div class="logo">MyChoice<span>.ai</span></div>
+      <div class="step-indicator">5 of 5</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width: 95%"></div></div>
+    <div class="content">
+      <h1>Family <em>Agreement</em></h1>
+      <p class="subtitle">Co-created rules your whole family designs together — no hidden surveillance, no secret monitoring.</p>
+
+      <div class="agreement-section">
+        <h3>📱 Screen Time</h3>
+        <div class="agreement-item">
+          <div class="agreement-check checked" onclick="this.classList.toggle('checked')"></div>
+          <span>Weeknight devices down by 9pm</span>
+          <span class="agreement-badge badge-family">Family</span>
+        </div>
+        <div class="agreement-item">
+          <div class="agreement-check checked" onclick="this.classList.toggle('checked')"></div>
+          <span>No phones during dinner</span>
+          <span class="agreement-badge badge-family">Family</span>
+        </div>
+        <div class="agreement-item">
+          <div class="agreement-check" onclick="this.classList.toggle('checked')"></div>
+          <span>Weekend gaming max 2 hours</span>
+          <span class="agreement-badge badge-teen">Teen</span>
+        </div>
+      </div>
+
+      <div class="agreement-section">
+        <h3>🤝 Communication</h3>
+        <div class="agreement-item">
+          <div class="agreement-check checked" onclick="this.classList.toggle('checked')"></div>
+          <span>Daily family check-in at dinner</span>
+          <span class="agreement-badge badge-parent">Parent</span>
+        </div>
+        <div class="agreement-item">
+          <div class="agreement-check checked" onclick="this.classList.toggle('checked')"></div>
+          <span>Coach nudges — not parent texts</span>
+          <span class="agreement-badge badge-teen">Teen</span>
+        </div>
+        <div class="agreement-item">
+          <div class="agreement-check" onclick="this.classList.toggle('checked')"></div>
+          <span>Weekly family vibe review together</span>
+          <span class="agreement-badge badge-family">Family</span>
+        </div>
+      </div>
+
+      <div class="agreement-section">
+        <h3>🎯 Personal Goals</h3>
+        <div class="agreement-item">
+          <div class="agreement-check checked" onclick="this.classList.toggle('checked')"></div>
+          <span>Alex: 30 min reading before screen time</span>
+          <span class="agreement-badge badge-teen">Teen</span>
+        </div>
+        <div class="agreement-item">
+          <div class="agreement-check checked" onclick="this.classList.toggle('checked')"></div>
+          <span>Bobby: Phone-free mornings until 8am</span>
+          <span class="agreement-badge badge-parent">Parent</span>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+    </div>
+    <div class="bottom-nav">
+      <button class="btn btn-secondary" onclick="goTo(5)">Back</button>
+      <button class="btn btn-primary" onclick="goTo(7)">See the Vision</button>
+    </div>
+  </div>
+
+  <!-- ═══════ SCREEN 7: Summary / CTA ═══════ -->
+  <div class="screen summary-screen" id="screen-7">
+    <div class="topbar">
+      <div class="logo">MyChoice<span>.ai</span></div>
+    </div>
+    <div class="content" style="align-items: center; text-align: center;">
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+        <h1 style="font-size:30px;">This is <em>MyChoice.ai</em></h1>
+        <p class="subtitle" style="max-width:340px;">A family wellness platform built on trust, not fear. Mentorship over surveillance. Coaching, not control.</p>
+        
+        <div class="summary-stats">
+          <div class="stat-box">
+            <div class="stat-num">$120B</div>
+            <div class="stat-label">TAM</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Products</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">$2M</div>
+            <div class="stat-label">Seed Round</div>
+          </div>
+        </div>
+
+        <div class="summary-pillars" style="width:100%; max-width:360px;">
+          <div class="pillar">
+            <div class="pillar-icon" style="background:#d1fae5;">🧠</div>
+            <span><strong>MyChoice.ai</strong> — Adult decision wellness</span>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon" style="background:#dbeafe;">👦</div>
+            <span><strong>EgoGentix Kids</strong> — Digital coaching for children</span>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon" style="background:#fce7f3;">🧸</div>
+            <span><strong>EgoPals</strong> — AI plush companions</span>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon" style="background:#fef3c7;">👨‍👩‍👧‍👦</div>
+            <span><strong>Family Bundle</strong> — One identity, full family</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px;">
+          <button class="btn btn-primary btn-block" onclick="goTo(1)">
+            ↻ Replay Demo
+          </button>
+          <a href="mailto:info@egogentix.ai" class="btn btn-secondary btn-block" style="text-decoration:none;">
+            Contact Us
+          </a>
+        </div>
+        
+        <div class="tagline" style="margin-top:28px;">
+          EgoGentix Corporation · Character first. Wisdom always.<br>
+          <span style="font-style:normal; opacity:0.6; font-size:12px;">info@egogentix.ai · egogentix.ai</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<script>
+  let currentScreen = 1;
+  
+  // Claude API configuration - key entered at runtime for security
+  let CLAUDE_API_KEY = localStorage.getItem('mychoice_api_key') || '';
+  
+  // Conversation history for context
+  let conversationHistory = [];
+  
+  // System prompt that defines the MyChoice coaching philosophy
+  const SYSTEM_PROMPT = `You are the MyChoice.ai Coach — an AI family wellness guide built on the philosophy of "mentorship over surveillance" and "coaching, not control."
+
+CURRENT FAMILY CONTEXT:
+- Parent: Bobby (the user you're talking to)
+- Teen: Alex, age 15, currently in "homework mode" for about 2 hours
+- Family values: Open communication, trust-based parenting, healthy tech balance
+- Current signals: Alex's focus is solid, no concerning patterns detected
+
+YOUR COACHING PHILOSOPHY:
+1. NEVER suggest spying, tracking, or monitoring without the child's knowledge
+2. ALWAYS favor conversation and connection over restriction
+3. Treat teens as emerging adults deserving of trust and autonomy
+4. Help parents understand the "why" behind behaviors, not just the "what"
+5. Suggest collaborative solutions — rules work better when co-created
+6. Validate parental concerns while redirecting from fear to curiosity
+7. Model the language of mentorship: "What if you tried..." not "You should..."
+
+YOUR PERSONALITY:
+- Warm, supportive, and non-judgmental
+- Speaks like a wise friend, not a clinical expert
+- Uses occasional emoji (🌱 💚 ✨) but sparingly
+- Keeps responses concise — 2-3 short paragraphs max
+- Asks follow-up questions to understand, not to interrogate
+
+WHAT YOU CAN DO:
+- Send "nudges" to family members (gentle, coach-style check-ins — NOT from the parent)
+- Suggest conversation starters for difficult topics
+- Help interpret "vibe signals" (screen time, sleep, social patterns)
+- Draft family agreements collaboratively
+- Provide research-backed parenting insights when relevant
+
+WHAT YOU NEVER DO:
+- Recommend surveillance apps or secret monitoring
+- Suggest punitive restrictions as a first response
+- Speak negatively about the teen or child
+- Provide medical, legal, or crisis intervention advice (redirect to professionals)
+- Share the parent's concerns directly with the child without permission
+
+Remember: You're helping Bobby be the parent he wants to be — present, connected, and trusting.`;
+
+  function goTo(n) {
+    const current = document.getElementById('screen-' + currentScreen);
+    const next = document.getElementById('screen-' + n);
+    if (!next || n === currentScreen) return;
+
+    current.classList.remove('active');
+    current.classList.add('exit');
+
+    setTimeout(() => {
+      current.classList.remove('exit');
+      next.classList.add('active');
+      next.scrollTop = 0;
+      currentScreen = n;
+      
+      // Check for API key when entering coach screen
+      if (n === 5 && !CLAUDE_API_KEY) {
+        setTimeout(promptForApiKey, 500);
+      }
+    }, 200);
+  }
+  
+  function promptForApiKey() {
+    const key = prompt('🔑 Enter your Anthropic API key to enable the AI Coach:\n\n(This is stored locally in your browser and never sent to our servers)');
+    if (key && key.startsWith('sk-ant-')) {
+      CLAUDE_API_KEY = key;
+      localStorage.setItem('mychoice_api_key', key);
+      alert('✅ API key saved! The Coach is now powered by Claude AI.');
+    } else if (key) {
+      alert('⚠️ That doesn\'t look like a valid Anthropic API key. It should start with "sk-ant-"');
+    }
+  }
+
+  function pickOpt(el) {
+    const siblings = el.parentElement.querySelectorAll('.persona-opt');
+    siblings.forEach(s => s.classList.remove('picked'));
+    el.classList.add('picked');
+  }
+
+  // Send a quick reply (from the suggestion buttons)
+  function sendQuickReply(text) {
+    const input = document.getElementById('chat-input');
+    input.value = text;
+    sendMessage();
+  }
+
+  // Main send message function
+  async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const chatArea = document.getElementById('chat-area');
+    const suggestions = document.getElementById('coach-suggestions');
+    const userMessage = input.value.trim();
+    
+    if (!userMessage) return;
+    
+    // Check for API key
+    if (!CLAUDE_API_KEY) {
+      promptForApiKey();
+      if (!CLAUDE_API_KEY) return;
+    }
+    
+    // Hide suggestions after first message
+    if (suggestions) {
+      suggestions.style.display = 'none';
+    }
+    
+    // Clear input
+    input.value = '';
+    
+    // Show user message
+    const userBubble = document.createElement('div');
+    userBubble.className = 'chat-bubble bubble-user';
+    userBubble.textContent = userMessage;
+    chatArea.appendChild(userBubble);
+    
+    // Add to conversation history
+    conversationHistory.push({ role: 'user', content: userMessage });
+    
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = '<div class="coach-label">🌿 MyChoice Coach</div><div class="chat-bubble bubble-coach"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+    chatArea.appendChild(typingDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    
+    try {
+      // Call Claude API
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': CLAUDE_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 500,
+          system: SYSTEM_PROMPT,
+          messages: conversationHistory
+        })
+      });
+      
+      const data = await response.json();
+      
+      // Remove typing indicator
+      document.getElementById('typing-indicator')?.remove();
+      
+      if (data.content && data.content[0] && data.content[0].text) {
+        const coachMessage = data.content[0].text;
+        
+        // Add to conversation history
+        conversationHistory.push({ role: 'assistant', content: coachMessage });
+        
+        // Show coach response
+        const responseDiv = document.createElement('div');
+        responseDiv.innerHTML = '<div class="coach-label">🌿 MyChoice Coach</div><div class="chat-bubble bubble-coach">' + escapeHtml(coachMessage) + '</div>';
+        chatArea.appendChild(responseDiv);
+      } else if (data.error) {
+        // Show error
+        const errorDiv = document.createElement('div');
+        let errorMsg = 'Hmm, I had trouble connecting. ';
+        if (data.error.type === 'authentication_error') {
+          errorMsg = 'API key issue — please check your key. ';
+          localStorage.removeItem('mychoice_api_key');
+          CLAUDE_API_KEY = '';
+        }
+        errorDiv.innerHTML = '<div class="coach-label">🌿 MyChoice Coach</div><div class="chat-bubble bubble-coach" style="background: #fef2f2; color: #991b1b;">' + errorMsg + '<a href="#" onclick="promptForApiKey(); return false;" style="color: #991b1b;">Try again</a></div>';
+        chatArea.appendChild(errorDiv);
+        console.error('API Error:', data.error);
+      }
+    } catch (error) {
+      // Remove typing indicator
+      document.getElementById('typing-indicator')?.remove();
+      
+      // Show error message
+      const errorDiv = document.createElement('div');
+      errorDiv.innerHTML = '<div class="coach-label">🌿 MyChoice Coach</div><div class="chat-bubble bubble-coach" style="background: #fef2f2; color: #991b1b;">I\'m having trouble connecting. Please check your connection and <a href="#" onclick="promptForApiKey(); return false;" style="color: #991b1b;">verify your API key</a>.</div>';
+      chatArea.appendChild(errorDiv);
+      console.error('Fetch Error:', error);
+    }
+    
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+  
+  // Helper to escape HTML in responses
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML.replace(/\n/g, '<br>');
+  }
+
+  // Keep old coachReply for backwards compatibility (won't be used)
+  function coachReply(el, type) {
+    sendQuickReply(el.textContent.trim());
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    // Don't navigate if typing in input
+    if (document.activeElement.tagName === 'INPUT') return;
+    
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      if (currentScreen < 7) goTo(currentScreen + 1);
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (currentScreen > 1) goTo(currentScreen - 1);
+    }
+  });
+</script>
 
 </body>
 </html>
