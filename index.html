@@ -57,6 +57,34 @@
     box-shadow: var(--shadow-lg);
   }
 
+  /* Desktop: Center the app with a nice background */
+  @media (min-width: 600px) {
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #f0fdf4 100%);
+    }
+    .app {
+      height: 85vh;
+      max-height: 900px;
+      min-height: 600px;
+      border-radius: 24px;
+      box-shadow: 0 25px 80px rgba(15, 23, 42, 0.15);
+    }
+  }
+
+  /* Large desktop: Show device frame */
+  @media (min-width: 900px) {
+    .app {
+      max-width: 420px;
+      border: 8px solid #1e293b;
+      border-radius: 32px;
+    }
+  }
+
   /* ─── Screens ─── */
   .screen {
     position: absolute;
