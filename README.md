@@ -1,51 +1,60 @@
 # MyChoice.ai — Interactive Prototype
 
-> **Mentorship over surveillance. Coaching, not control.**
+> Mentorship over surveillance. Coaching, not control.
 
-An interactive demo of the MyChoice.ai family wellness platform, part of the [EgoGentix](https://egogentix.ai) ecosystem.
+An interactive demo of the **MyChoice.ai** family wellness platform, part of the [EgoGentix](https://egogentix.ai) ecosystem.
 
 ## 🚀 Live Demo
 
-**[Launch Prototype →](https://realbillcunningham-egogentix.github.io/glowing-chainsaw/)**
+**[Launch Prototype →](https://mychoice-mvp.vercel.app)**
 
-## 📱 What This Demonstrates
-
-MyChoice.ai reimagines family digital wellness by replacing surveillance-based parenting tools with AI-powered mentorship. This prototype showcases:
-
-| Screen | Purpose |
-|--------|---------|
-| **Welcome** | Brand introduction and value proposition |
-| **Family Setup** | Onboarding flow for parents and children |
-| **Persona Engine** | Guided questions to understand parenting style |
-| **Vibe Dashboard** | Real-time family wellness signals (not surveillance) |
-| **AI Coach** | Contextual guidance through conversation |
-| **Family Agreement** | Collaborative rule-setting between parents and kids |
-| **Summary** | Personalized insights and recommendations |
-
-## 💡 Core Philosophy
-
-Traditional parental control apps monitor and restrict. MyChoice.ai coaches and collaborates:
-
-- **No tracking** — We don't spy on your kids
-- **No data selling** — Your family data stays yours
-- **Kill switch** — You own and control your identity
-- **Mentorship model** — Guide, don't surveil
-
-## 🛠 Technical Details
-
-- Single HTML file, no build step required
-- Vanilla JavaScript + CSS (no framework dependencies)
-- Mobile-first, responsive design
-- Works offline after initial load
-
-## 📂 Repository Structure
+## 🏗 Architecture
 
 ```
 /
-├── index.html      # Main prototype (production)
-├── drafts/         # Work-in-progress versions
+├── index.html      # Single-page prototype (7 interactive screens)
+├── api/
+│   └── chat.js     # Vercel serverless proxy → Anthropic Claude API
+├── vercel.json     # Route configuration
+├── .env.example    # Environment variable template
 └── README.md
 ```
+
+**How it works:**
+- The frontend is a single HTML file — no build step, no framework
+- AI Coach chat goes through `/api/chat` (Vercel serverless function)
+- The serverless function adds the API key server-side and proxies to Anthropic
+- API key lives in Vercel Environment Variables — never in the repo
+
+## 🔧 Setup
+
+### Vercel (Production)
+1. Connect this repo to Vercel
+2. Add Environment Variable: `ANTHROPIC_API_KEY` = your key
+3. Deploy — done!
+
+### Local Development
+```bash
+npm i -g vercel
+cp .env.example .env.local
+# Edit .env.local with your actual API key
+vercel dev
+```
+
+## 📱 Features
+
+- **7-Screen Interactive Demo**: Welcome → Onboarding → Persona Engine → Vibe Dashboard → AI Coach → Family Agreement → Vision/CTA
+- **Live AI Coach**: Powered by Claude, adapts to the user's parenting style
+- **Persona Engine**: Captures parenting style and tailors the entire experience
+- **Family Agreement Builder**: Collaborative rules the whole family designs together
+- **Mobile-first**: Responsive design that looks great on any device
+
+## 🔐 Security
+
+- ✅ API key stored server-side in Vercel environment variables
+- ✅ No credentials in the codebase
+- ✅ No direct browser-to-Anthropic API calls
+- ✅ `.gitignore` excludes all env files
 
 ## 🏢 About EgoGentix
 
@@ -59,9 +68,8 @@ EgoGentix is building the identity layer for families — permanent, user-owned 
 
 ## 📬 Contact
 
-**Bill Cunningham** — Founder & CEO  
-bill@egogentix.com  
-[egogentix.ai](https://egogentix.ai)
+**Bill Cunningham** — Founder & CEO
+bill@egogentix.com · [egogentix.ai](https://egogentix.ai)
 
 ---
 

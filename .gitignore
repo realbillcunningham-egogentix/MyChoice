@@ -1,5 +1,21 @@
-node_modules
-.env.local
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit these
 .env
-dist
-.vercel
+.env.local
+.env.production
+
+# Vercel
+.vercel/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Drafts and working files
+drafts/
